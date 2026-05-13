@@ -30,7 +30,7 @@ import qualified Dictionary
 
 data Expr = Num Integer | Var String | Add Expr Expr 
        | Sub Expr Expr | Mul Expr Expr | Div Expr Expr | Pow Expr Expr 
-         deriving Show
+         deriving (Show, Eq)
 
 type T = Expr
 
@@ -101,7 +101,6 @@ value (Div e1 e2) e = do
         x <- value e1 e
         y <- value e2 e 
         safeDiv x y 
-
 value (Pow e1 e2) e = (^) <$> value e1 e <*> value e2 e
 
 
