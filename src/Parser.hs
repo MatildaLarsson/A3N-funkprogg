@@ -19,11 +19,11 @@ cons(a, b) = a:b
 
 -- Runs both parsers but only keep the result of second one
 (-#) :: Parser a -> Parser b -> Parser b
-m -# n = error "-# not implemented"
+m -# n = (m # n) >-> snd
 
 -- Runs both parsers but only keeps the result of the first
 (#-) :: Parser a -> Parser b -> Parser a
-m #- n = error "#- not implemented"
+m #- n = (m # n) >-> fst
 
 -- Here's an example of an implementation.
 -- Treat comments as whitespace
@@ -58,19 +58,23 @@ token :: Parser a -> Parser a
 token m = m #- spaces
 
 letter :: Parser Char
-letter =  error "letter not implemented"
+letter = char ? isAlpha
 
 word :: Parser String
 word = token (letter # iter letter >-> cons)
 
 chars :: Int -> Parser String
-chars n =  error "chars not implemented"
+chars 0 = return []
+chars n = 
+    char #> \c ->
+        chars (n-1) #> \cs ->
+            return (c:cs)
 
 accept :: String -> Parser String
 accept w = (token (chars (length w))) ? (==w)
 
 require :: String -> Parser String
-require w  = error "require not implemented"
+require w  = accept w ! fail
 
 lit :: Char -> Parser Char
 lit c = token char ? (==c)
