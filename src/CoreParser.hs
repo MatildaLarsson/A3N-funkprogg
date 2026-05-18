@@ -1,3 +1,4 @@
+--Matilda Larsson and Emma Paponja
 module CoreParser(Parser, char, return, fail, (#), (!), (?), (#>), (>->),
                   Parse, parse, toString, fromString) where
 
